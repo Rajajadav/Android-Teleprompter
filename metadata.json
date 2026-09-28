@@ -1,0 +1,6 @@
+{
+  "name": "PromptDesk",
+  "description": "Speak naturally. Create confidently. A professional teleprompter app with smooth scrolling, voice follow, and camera recording.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
