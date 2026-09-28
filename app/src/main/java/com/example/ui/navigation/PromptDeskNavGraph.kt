@@ -1,6 +1,10 @@
 package com.example.ui.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -46,8 +51,7 @@ import com.example.ui.scripts.ScriptsScreen
 import com.example.ui.settings.SettingsScreen
 import com.example.ui.splash.SplashScreen
 import com.example.ui.teleprompter.TeleprompterScreen
-import com.example.ui.theme.CharcoalSurface
-import com.example.ui.theme.Teal80
+import com.example.ui.theme.ColorTokens
 import kotlinx.coroutines.launch
 
 data class BottomNavItem(
@@ -110,53 +114,72 @@ fun PromptDeskNavGraph(
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                Surface(
-                    color = CharcoalSurface,
-                    shadowElevation = 8.dp
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(horizontal = 24.dp, vertical = 12.dp)
                 ) {
-                    NavigationBar(
-                        containerColor = CharcoalSurface,
-                        contentColor = Color.White,
-                        tonalElevation = 0.dp
+                    Surface(
+                        color = ColorTokens.DarkElevatedCard,
+                        shape = RoundedCornerShape(26.dp),
+                        shadowElevation = 10.dp,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, ColorTokens.DarkBorder),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        bottomNavItems.forEach { item ->
-                            val isSelected = when (item.route) {
-                                Screen.CameraRecord.createRoute(0L) -> currentRoute?.startsWith("camera_record") == true
-                                else -> currentRoute == item.route
-                            }
+                        NavigationBar(
+                            containerColor = Color.Transparent,
+                            tonalElevation = 0.dp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(66.dp)
+                        ) {
+                            bottomNavItems.forEach { item ->
+                                val isSelected = when (item.route) {
+                                    Screen.CameraRecord.createRoute(0L) -> currentRoute?.startsWith("camera_record") == true
+                                    else -> currentRoute == item.route
+                                }
 
-                            NavigationBarItem(
-                                selected = isSelected,
-                                onClick = {
-                                    if (item.route.startsWith("camera_record")) {
-                                        navController.navigate(Screen.CameraRecord.createRoute(0L))
-                                    } else {
-                                        navController.navigate(item.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                                NavigationBarItem(
+                                    selected = isSelected,
+                                    onClick = {
+                                        if (item.route.startsWith("camera_record")) {
+                                            navController.navigate(Screen.CameraRecord.createRoute(0L))
+                                        } else {
+                                            navController.navigate(item.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
                                         }
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                                        contentDescription = item.title,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                },
-                                label = { Text(item.title) },
-                                colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Color(0xFF042F2E),
-                                    selectedTextColor = Teal80,
-                                    indicatorColor = Teal80,
-                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                                ),
-                                modifier = Modifier.testTag(item.testTag)
-                            )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
+                                            contentDescription = item.title,
+                                            modifier = Modifier.size(22.dp)
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = item.title,
+                                            style = MaterialTheme.typography.labelSmall.copy(
+                                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                                            )
+                                        )
+                                    },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = Color(0xFF042F2E),
+                                        selectedTextColor = ColorTokens.PrimaryAccent,
+                                        indicatorColor = ColorTokens.PrimaryAccent,
+                                        unselectedIconColor = ColorTokens.DarkSecondaryText,
+                                        unselectedTextColor = ColorTokens.DarkMutedText
+                                    ),
+                                    modifier = Modifier.testTag(item.testTag)
+                                )
+                            }
                         }
                     }
                 }

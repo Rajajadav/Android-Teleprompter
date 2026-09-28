@@ -98,7 +98,7 @@ fun ScriptsScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = CharcoalBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToEditor(0L) },
@@ -129,7 +129,7 @@ fun ScriptsScreen(
                     text = "All Scripts",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
@@ -272,6 +272,13 @@ fun ScriptsScreen(
                             script = script,
                             onClick = { onNavigateToEditor(script.id) },
                             onPlayClick = { onNavigateToTeleprompter(script.id) },
+                            onFloatingOverlayClick = {
+                                if (com.example.overlay.manager.OverlayManager.hasOverlayPermission(context)) {
+                                    com.example.overlay.manager.OverlayManager.startFloatingPrompter(context, script.id)
+                                } else {
+                                    com.example.overlay.manager.OverlayManager.requestOverlayPermission(context)
+                                }
+                            },
                             onRecordClick = { onNavigateToCamera(script.id) },
                             onEditClick = { onNavigateToEditor(script.id) },
                             onFavoriteToggle = { viewModel.toggleFavorite(script) },

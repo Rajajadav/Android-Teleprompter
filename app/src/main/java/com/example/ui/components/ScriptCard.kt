@@ -1,5 +1,6 @@
 package com.example.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,7 @@ fun ScriptCard(
     script: ScriptEntity,
     onClick: () -> Unit,
     onPlayClick: () -> Unit,
+    onFloatingOverlayClick: () -> Unit,
     onRecordClick: () -> Unit,
     onEditClick: () -> Unit,
     onFavoriteToggle: () -> Unit,
@@ -128,19 +130,27 @@ fun ScriptCard(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
+                            text = { Text("Start Floating Teleprompter") },
+                            leadingIcon = { Icon(Icons.Outlined.Videocam, contentDescription = null, tint = Teal80) },
+                            onClick = {
+                                showMenu = false
+                                onFloatingOverlayClick()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Fullscreen Teleprompter") },
+                            leadingIcon = { Icon(Icons.Default.PlayArrow, contentDescription = null) },
+                            onClick = {
+                                showMenu = false
+                                onPlayClick()
+                            }
+                        )
+                        DropdownMenuItem(
                             text = { Text("Edit Script") },
                             leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                             onClick = {
                                 showMenu = false
                                 onEditClick()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Record with Camera") },
-                            leadingIcon = { Icon(Icons.Outlined.Videocam, contentDescription = null) },
-                            onClick = {
-                                showMenu = false
-                                onRecordClick()
                             }
                         )
                         DropdownMenuItem(
@@ -212,33 +222,43 @@ fun ScriptCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = "•  ${Formatters.formatRelativeTime(script.updatedAt)}",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                        )
-                    )
                 }
 
-                FilledIconButton(
-                    onClick = onPlayClick,
-                    shape = CircleShape,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = Teal80,
-                        contentColor = Color(0xFF042F2E)
-                    ),
-                    modifier = Modifier
-                        .size(40.dp)
-                        .testTag("play_button_${script.id}")
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Start Teleprompter",
-                        modifier = Modifier.size(24.dp)
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    // Floating Prompter Overlay Quick Action
+                    FilledIconButton(
+                        onClick = onFloatingOverlayClick,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = Teal80,
+                            contentColor = Color(0xFF042F2E)
+                        ),
+                        modifier = Modifier
+                            .size(38.dp)
+                            .testTag("floating_overlay_button_${script.id}")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Videocam,
+                            contentDescription = "Start Floating Overlay",
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    // Fullscreen Prompter Action
+                    IconButton(
+                        onClick = onPlayClick,
+                        modifier = Modifier
+                            .size(38.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
+                            .testTag("play_button_${script.id}")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Fullscreen Teleprompter",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }

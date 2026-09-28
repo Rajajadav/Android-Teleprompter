@@ -134,7 +134,7 @@ fun ScriptEditorScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = CharcoalBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -148,8 +148,8 @@ fun ScriptEditorScreen(
                             unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier
@@ -165,7 +165,7 @@ fun ScriptEditorScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -216,7 +216,7 @@ fun ScriptEditorScreen(
                             Icon(
                                 imageVector = Icons.Default.MoreVert,
                                 contentDescription = "More",
-                                tint = Color.White
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
@@ -244,13 +244,13 @@ fun ScriptEditorScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CharcoalSurface
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
         bottomBar = {
             Surface(
-                color = CharcoalSurface,
+                color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 8.dp,
                 modifier = Modifier.imePadding()
             ) {
@@ -309,7 +309,7 @@ fun ScriptEditorScreen(
                                 text = "$wordCount words",
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             )
                             Text(
@@ -320,43 +320,47 @@ fun ScriptEditorScreen(
                             )
                         }
 
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            // Camera Recording Button
-                            FilledIconButton(
-                                onClick = {
-                                    viewModel.saveScriptImmediately()
-                                    val id = viewModel.getScriptId()
-                                    onNavigateToCamera(id)
-                                },
-                                colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                    contentColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(12.dp),
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Icon(Icons.Default.Videocam, contentDescription = "Camera Prompter")
-                            }
-
-                            // Start Teleprompter Primary Button
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            // Floating Overlay Prompter Button
                             Button(
                                 onClick = {
                                     viewModel.saveScriptImmediately()
                                     val id = viewModel.getScriptId()
-                                    onNavigateToTeleprompter(id)
+                                    if (com.example.overlay.manager.OverlayManager.hasOverlayPermission(context)) {
+                                        com.example.overlay.manager.OverlayManager.startFloatingPrompter(context, id)
+                                    } else {
+                                        com.example.overlay.manager.OverlayManager.requestOverlayPermission(context)
+                                    }
                                 },
-                                shape = RoundedCornerShape(12.dp),
+                                shape = RoundedCornerShape(14.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Teal80,
                                     contentColor = Color(0xFF042F2E)
                                 ),
                                 modifier = Modifier
                                     .height(48.dp)
+                                    .testTag("floating_prompter_button")
+                            ) {
+                                Icon(Icons.Default.Videocam, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Floating", fontWeight = FontWeight.Bold)
+                            }
+
+                            // Fullscreen Teleprompter Button
+                            OutlinedButton(
+                                onClick = {
+                                    viewModel.saveScriptImmediately()
+                                    val id = viewModel.getScriptId()
+                                    onNavigateToTeleprompter(id)
+                                },
+                                shape = RoundedCornerShape(14.dp),
+                                modifier = Modifier
+                                    .height(48.dp)
                                     .testTag("start_teleprompter_button")
                             ) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(20.dp))
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Start Prompter", fontWeight = FontWeight.Bold)
+                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Fullscreen", color = MaterialTheme.colorScheme.onSurface)
                             }
                         }
                     }
@@ -369,7 +373,7 @@ fun ScriptEditorScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(CharcoalBackground)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             TextField(
                 value = content,
@@ -385,7 +389,7 @@ fun ScriptEditorScreen(
                 textStyle = TextStyle(
                     fontSize = 22.sp,
                     lineHeight = 32.sp,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = textAlign
                 ),
                 colors = TextFieldDefaults.colors(
@@ -407,7 +411,7 @@ fun ScriptEditorScreen(
         ModalBottomSheet(
             onDismissRequest = { showAiSheet = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = CharcoalSurface
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             Column(
                 modifier = Modifier
@@ -423,7 +427,7 @@ fun ScriptEditorScreen(
                         text = "AI Script Assistant",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     )
                     if (isAiLoading) {
@@ -447,10 +451,10 @@ fun ScriptEditorScreen(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = CharcoalBackground,
-                        unfocusedContainerColor = CharcoalBackground,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
 

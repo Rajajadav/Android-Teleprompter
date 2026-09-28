@@ -41,6 +41,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
@@ -322,13 +323,32 @@ fun CameraPrompterScreen(
                 }
             }
 
-            IconButton(
-                onClick = { viewModel.flipCamera() },
-                modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.6f), CircleShape)
-                    .size(40.dp)
-            ) {
-                Icon(Icons.Default.Cameraswitch, contentDescription = "Flip camera", tint = Color.White)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = {
+                        if (com.example.overlay.manager.OverlayManager.hasOverlayPermission(context)) {
+                            com.example.overlay.manager.OverlayManager.startFloatingPrompter(context, scriptId)
+                            com.example.camera.NativeCameraLauncher.launchCamera(context)
+                            onNavigateBack()
+                        } else {
+                            com.example.overlay.manager.OverlayManager.requestOverlayPermission(context)
+                        }
+                    },
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.6f), CircleShape)
+                        .size(40.dp)
+                ) {
+                    Icon(Icons.Default.Layers, contentDescription = "Native Camera Overlay", tint = Teal80)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = { viewModel.flipCamera() },
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.6f), CircleShape)
+                        .size(40.dp)
+                ) {
+                    Icon(Icons.Default.Cameraswitch, contentDescription = "Flip camera", tint = Color.White)
+                }
             }
         }
 

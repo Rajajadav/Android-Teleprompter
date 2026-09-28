@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.OfflinePin
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material3.Button
@@ -59,24 +60,24 @@ fun OnboardingScreen(
 ) {
     val pages = listOf(
         OnboardingPageData(
-            title = "Your script. Your voice.",
-            description = "Craft and organize talking points, speeches, and video scripts effortlessly with autosave.",
+            title = "Your script stays with you.",
+            description = "Craft and organize talking points and speeches that seamlessly follow you across apps.",
             icon = Icons.Default.Description
         ),
         OnboardingPageData(
-            title = "Scroll naturally while you speak.",
-            description = "Distraction-free teleprompter scrolling with custom speed, font size, mirror mode, and Voice Follow matching.",
+            title = "Use it over your Camera.",
+            description = "PromptDesk floats as a lightweight overlay directly above your native Camera app or social media recorders.",
+            icon = Icons.Default.Layers
+        ),
+        OnboardingPageData(
+            title = "Read naturally while recording.",
+            description = "Maintain authentic eye contact with your viewers while the teleprompter smoothly scrolls at your pace.",
             icon = Icons.Default.RecordVoiceOver
         ),
         OnboardingPageData(
-            title = "Record professional videos.",
-            description = "Keep flawless eye contact with the camera while reading your prompts directly on screen.",
+            title = "Position it near your camera lens.",
+            description = "Drag the floating window right next to your front camera lens so you look straight into the camera. Overlay permission is required.",
             icon = Icons.Default.CameraAlt
-        ),
-        OnboardingPageData(
-            title = "Works offline.",
-            description = "PromptDesk stores your scripts securely on your device so you can record anywhere, anytime without internet.",
-            icon = Icons.Default.OfflinePin
         )
     )
 

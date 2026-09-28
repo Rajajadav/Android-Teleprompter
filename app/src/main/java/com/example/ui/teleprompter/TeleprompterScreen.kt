@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.FormatAlignCenter
 import androidx.compose.material.icons.filled.FormatAlignLeft
 import androidx.compose.material.icons.filled.FormatAlignRight
 import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.Pause
@@ -278,6 +279,29 @@ fun TeleprompterScreen(
                                 fontWeight = FontWeight.Bold
                             ),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            viewModel.pausePlaying()
+                            if (com.example.overlay.manager.OverlayManager.hasOverlayPermission(context)) {
+                                com.example.overlay.manager.OverlayManager.startFloatingPrompter(context, scriptId)
+                                onNavigateBack()
+                            } else {
+                                com.example.overlay.manager.OverlayManager.requestOverlayPermission(context)
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .background(Color.Black.copy(alpha = 0.65f), CircleShape)
+                            .size(44.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Layers,
+                            contentDescription = "Floating Overlay Prompter",
+                            tint = Teal80,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }

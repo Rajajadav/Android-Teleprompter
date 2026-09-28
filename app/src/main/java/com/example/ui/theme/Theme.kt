@@ -13,54 +13,52 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = Teal80,
+        primary = ColorTokens.PrimaryAccent,
         onPrimary = Color(0xFF042F2E),
-        primaryContainer = TealDark40,
-        onPrimaryContainer = TealLight80,
-        secondary = TealCyan80,
+        primaryContainer = ColorTokens.AccentSubtle,
+        onPrimaryContainer = ColorTokens.SecondaryAccent,
+        secondary = ColorTokens.SecondaryAccent,
         onSecondary = Color(0xFF082F49),
-        secondaryContainer = Color(0xFF0369A1),
-        onSecondaryContainer = Color(0xFFE0F2FE),
-        tertiary = TealLight80,
-        background = CharcoalBackground,
-        onBackground = TextPrimary,
-        surface = CharcoalSurface,
-        onSurface = TextPrimary,
-        surfaceVariant = CharcoalSurfaceVariant,
-        onSurfaceVariant = TextSecondary,
-        outline = CharcoalOutline,
-        outlineVariant = CharcoalOutlineVariant,
-        error = RecordRed,
+        secondaryContainer = ColorTokens.DarkElevatedCard,
+        onSecondaryContainer = ColorTokens.DarkPrimaryText,
+        background = ColorTokens.DarkPrimaryBg,
+        onBackground = ColorTokens.DarkPrimaryText,
+        surface = ColorTokens.DarkSecondaryBg,
+        onSurface = ColorTokens.DarkPrimaryText,
+        surfaceVariant = ColorTokens.DarkCard,
+        onSurfaceVariant = ColorTokens.DarkSecondaryText,
+        outline = ColorTokens.DarkBorder,
+        outlineVariant = ColorTokens.DarkBorder.copy(alpha = 0.5f),
+        error = ColorTokens.Error,
         onError = Color.White
     )
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = Teal40,
+        primary = ColorTokens.LightPrimaryAccent,
         onPrimary = Color.White,
-        primaryContainer = Color(0xFFCCFBF1),
-        onPrimaryContainer = Color(0xFF134E4A),
-        secondary = TealCyan40,
+        primaryContainer = Color(0xFFE6FAF7),
+        onPrimaryContainer = Color(0xFF044840),
+        secondary = ColorTokens.LightSecondaryAccent,
         onSecondary = Color.White,
-        secondaryContainer = Color(0xFFE0F2FE),
-        onSecondaryContainer = Color(0xFF0369A1),
-        tertiary = TealDark40,
-        background = Color(0xFFF8FAFC),
-        onBackground = Color(0xFF0F172A),
-        surface = Color.White,
-        onSurface = Color(0xFF0F172A),
-        surfaceVariant = Color(0xFFF1F5F9),
-        onSurfaceVariant = Color(0xFF475569),
-        outline = Color(0xFFCBD5E1),
-        outlineVariant = Color(0xFFE2E8F0),
-        error = Color(0xFFDC2626),
+        secondaryContainer = ColorTokens.LightElevatedCard,
+        onSecondaryContainer = ColorTokens.LightPrimaryText,
+        background = ColorTokens.LightPrimaryBg,
+        onBackground = ColorTokens.LightPrimaryText,
+        surface = ColorTokens.LightSecondaryBg,
+        onSurface = ColorTokens.LightPrimaryText,
+        surfaceVariant = ColorTokens.LightCard,
+        onSurfaceVariant = ColorTokens.LightSecondaryText,
+        outline = ColorTokens.LightBorder,
+        outlineVariant = ColorTokens.LightBorder.copy(alpha = 0.5f),
+        error = ColorTokens.Error,
         onError = Color.White
     )
 
 @Composable
 fun PromptDeskTheme(
-    darkTheme: Boolean = true, // Dark-first for teleprompter creator focus
-    dynamicColor: Boolean = false, // Keep signature brand teal by default
+    darkTheme: Boolean = true, // Dark-first creator aesthetic
+    dynamicColor: Boolean = false, // Preserve brand Teal palette
     content: @Composable () -> Unit,
 ) {
     val colorScheme =

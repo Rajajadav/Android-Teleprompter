@@ -44,6 +44,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -100,7 +101,7 @@ fun SettingsScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = CharcoalBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         Column(
@@ -115,13 +116,13 @@ fun SettingsScreen(
                 text = "Settings",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
 
             // Appearance Section
             SettingsSection(title = "Appearance", icon = Icons.Default.Palette) {
-                Text("Theme Mode", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text("Theme Mode", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("DARK" to "Dark", "LIGHT" to "Light", "SYSTEM" to "System").forEach { (key, label) ->
@@ -143,7 +144,7 @@ fun SettingsScreen(
                 // Default Speed
                 Text(
                     text = "Default Scroll Speed: ${String.format("%.1f", defaultSpeed)}x",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 )
                 Slider(
@@ -158,7 +159,7 @@ fun SettingsScreen(
                 // Default Font Size
                 Text(
                     text = "Default Font Size: ${defaultFontSize.toInt()}sp",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 )
                 Slider(
@@ -171,7 +172,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Default Alignment
-                Text("Default Text Alignment", color = Color.White, fontSize = 14.sp)
+                Text("Default Text Alignment", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("LEFT" to Icons.Default.FormatAlignLeft, "CENTER" to Icons.Default.FormatAlignCenter, "RIGHT" to Icons.Default.FormatAlignRight).forEach { (align, icon) ->
@@ -191,7 +192,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Countdown timer
-                Text("Start Countdown", color = Color.White, fontSize = 14.sp)
+                Text("Start Countdown", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(0 to "Off", 3 to "3s", 5 to "5s", 10 to "10s").forEach { (sec, label) ->
@@ -210,7 +211,7 @@ fun SettingsScreen(
 
             // Voice Follow Section
             SettingsSection(title = "Voice Follow Mode", icon = Icons.Default.RecordVoiceOver) {
-                Text("Recognition Language", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text("Recognition Language", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("en-US" to "English (US)", "en-IN" to "English (India)", "hi-IN" to "Hindi (हिंदी)").forEach { (code, name) ->
@@ -230,7 +231,7 @@ fun SettingsScreen(
 
                 Text(
                     text = "Fuzzy Match Sensitivity: ${String.format("%.1f", voiceFollowSensitivity)}x",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 )
                 Slider(
@@ -242,19 +243,73 @@ fun SettingsScreen(
             }
 
             // Floating Overlay Teleprompter Section
-            SettingsSection(title = "Floating Prompter Mode", icon = Icons.Default.PictureInPicture) {
+            SettingsSection(title = "Floating Window & Native Camera", icon = Icons.Default.PictureInPicture) {
                 Text(
-                    text = "Use PromptDesk as a floating window over third-party camera apps (TikTok, Instagram, native camera).",
+                    text = "PromptDesk floats directly over your device's native Camera app so you can record videos at highest resolution and quality while reading your script near the camera lens.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    onClick = { showFloatingModal = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = Color.White),
-                    shape = RoundedCornerShape(10.dp)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                val hasOverlay = com.example.overlay.manager.OverlayManager.hasOverlayPermission(context)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Permission: ", color = MaterialTheme.colorScheme.onSurface, fontSize = 13.sp)
+                    Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = if (hasOverlay) TealDark40 else com.example.ui.theme.WarningAmber.copy(alpha = 0.2f)
+                    ) {
+                        Text(
+                            text = if (hasOverlay) "Active / Allowed" else "Permission Required",
+                            color = if (hasOverlay) Teal80 else com.example.ui.theme.WarningAmber,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("Configure Overlay Permission")
+                    Button(
+                        onClick = {
+                            if (hasOverlay) {
+                                com.example.overlay.manager.OverlayManager.startFloatingPrompter(context, 0L)
+                            } else {
+                                showFloatingModal = true
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Teal80, contentColor = Color(0xFF042F2E)),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Start Floating", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        onClick = {
+                            com.example.camera.NativeCameraLauncher.launchCamera(context)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Open Camera")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedButton(
+                    onClick = { showFloatingModal = true },
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Configure Overlay Permission", color = Teal80)
                 }
             }
 
@@ -268,7 +323,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = { viewModel.clearCache() },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text("Clear Temporary Cache")
@@ -283,7 +338,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("PromptDesk Studio", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("PromptDesk Studio", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
                         Text("Version 1.0 (Build 2026)", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                     }
                     TextButton(onClick = { showAboutDialog = true }) {
@@ -388,7 +443,7 @@ fun SettingsSection(
                     text = title,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 )
             }
