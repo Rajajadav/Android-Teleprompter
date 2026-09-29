@@ -125,6 +125,10 @@ class CameraPrompterViewModel(
         _isPrompterScrolling.value = !_isPrompterScrolling.value
     }
 
+    fun togglePrompterScrolling() {
+        togglePrompterScroll()
+    }
+
     fun setScrollSpeed(speed: Float) {
         _scrollSpeed.value = speed.coerceIn(0.2f, 4.0f)
     }

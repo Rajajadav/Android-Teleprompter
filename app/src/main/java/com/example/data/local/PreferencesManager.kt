@@ -18,6 +18,17 @@ class PreferencesManager(private val context: Context) {
 
     companion object {
         val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
+        val KEY_IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+        val KEY_PROFILE_COMPLETED = booleanPreferencesKey("profile_completed")
+        val KEY_USER_NAME = stringPreferencesKey("user_name")
+        val KEY_USER_EMAIL = stringPreferencesKey("user_email")
+        val KEY_USER_PHOTO_URL = stringPreferencesKey("user_photo_url")
+        val KEY_USER_OCCUPATION = stringPreferencesKey("user_occupation")
+        val KEY_USER_OTHER_OCCUPATION = stringPreferencesKey("user_other_occupation")
+        val KEY_USER_USE_CASES = stringPreferencesKey("user_use_cases")
+        val KEY_USER_REFERRAL = stringPreferencesKey("user_referral")
+        val KEY_USER_OTHER_REFERRAL = stringPreferencesKey("user_other_referral")
+
         val KEY_DEFAULT_SPEED = floatPreferencesKey("default_speed")
         val KEY_DEFAULT_FONT_SIZE = floatPreferencesKey("default_font_size")
         val KEY_DEFAULT_ALIGNMENT = stringPreferencesKey("default_alignment")
@@ -45,6 +56,87 @@ class PreferencesManager(private val context: Context) {
     suspend fun setOnboardingCompleted(completed: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[KEY_ONBOARDING_COMPLETED] = completed
+        }
+    }
+
+    val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[KEY_IS_LOGGED_IN] ?: false
+    }
+
+    val isProfileCompleted: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[KEY_PROFILE_COMPLETED] ?: false
+    }
+
+    val userName: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_NAME] ?: "Raja Jadav"
+    }
+
+    val userEmail: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_EMAIL] ?: "rajajadavstudio@gmail.com"
+    }
+
+    val userPhotoUrl: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_PHOTO_URL] ?: ""
+    }
+
+    val userOccupation: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_OCCUPATION] ?: "Content Creator"
+    }
+
+    val userOtherOccupation: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_OTHER_OCCUPATION] ?: ""
+    }
+
+    val userUseCases: Flow<List<String>> = context.dataStore.data.map { prefs ->
+        val raw = prefs[KEY_USER_USE_CASES] ?: "YouTube Videos,Short Videos"
+        if (raw.isBlank()) emptyList() else raw.split("|||")
+    }
+
+    val userReferral: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_REFERRAL] ?: ""
+    }
+
+    val userOtherReferral: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_OTHER_REFERRAL] ?: ""
+    }
+
+    suspend fun saveGoogleUser(name: String, email: String, photoUrl: String?) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_IS_LOGGED_IN] = true
+            prefs[KEY_USER_NAME] = name
+            prefs[KEY_USER_EMAIL] = email
+            if (!photoUrl.isNullOrBlank()) {
+                prefs[KEY_USER_PHOTO_URL] = photoUrl
+            }
+        }
+    }
+
+    suspend fun saveProfileSetup(
+        name: String,
+        occupation: String,
+        otherOccupation: String,
+        useCases: List<String>,
+        referral: String,
+        otherReferral: String
+    ) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_USER_NAME] = name
+            prefs[KEY_USER_OCCUPATION] = occupation
+            prefs[KEY_USER_OTHER_OCCUPATION] = otherOccupation
+            prefs[KEY_USER_USE_CASES] = useCases.joinToString("|||")
+            prefs[KEY_USER_REFERRAL] = referral
+            prefs[KEY_USER_OTHER_REFERRAL] = otherReferral
+            prefs[KEY_PROFILE_COMPLETED] = true
+            prefs[KEY_ONBOARDING_COMPLETED] = true
+            prefs[KEY_IS_LOGGED_IN] = true
+        }
+    }
+
+    suspend fun signOut() {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_IS_LOGGED_IN] = false
+            prefs[KEY_PROFILE_COMPLETED] = false
+            prefs[KEY_ONBOARDING_COMPLETED] = false
         }
     }
 

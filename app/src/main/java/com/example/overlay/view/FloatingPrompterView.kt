@@ -496,10 +496,10 @@ class FloatingPrompterView(
     private fun createCardBackground(opacity: Float): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            cornerRadius = dp(16).toFloat()
+            cornerRadius = dp(20).toFloat()
             val alpha = (opacity * 255).toInt().coerceIn(0, 255)
-            setColor(Color.argb(alpha, 13, 17, 23)) // Dark slate
-            setStroke(dp(1), Color.argb(80, 94, 234, 212)) // Subtle teal border
+            setColor(Color.argb(alpha, 23, 27, 33)) // #171B21 Obsidian Surface
+            setStroke(dp(1), Color.argb(64, 75, 227, 204)) // Subtle luminescent teal border
         }
     }
 

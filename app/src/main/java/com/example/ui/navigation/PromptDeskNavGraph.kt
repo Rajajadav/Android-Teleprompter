@@ -43,6 +43,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.PromptDeskApp
+import com.example.ui.auth.AuthScreen
+import com.example.ui.auth.ProfileSetupScreen
 import com.example.ui.camera.CameraPrompterScreen
 import com.example.ui.editor.ScriptEditorScreen
 import com.example.ui.home.HomeScreen
@@ -101,7 +103,8 @@ fun PromptDeskNavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val preferencesManager = PromptDeskApp.instance.preferencesManager
-    val isOnboardingCompleted by preferencesManager.isOnboardingCompleted.collectAsStateWithLifecycle(initialValue = true)
+    val isLoggedIn by preferencesManager.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
+    val isProfileCompleted by preferencesManager.isProfileCompleted.collectAsStateWithLifecycle(initialValue = false)
     val coroutineScope = rememberCoroutineScope()
 
     // Show bottom bar only on core destinations
@@ -121,9 +124,9 @@ fun PromptDeskNavGraph(
                         .padding(horizontal = 24.dp, vertical = 12.dp)
                 ) {
                     Surface(
-                        color = ColorTokens.DarkElevatedCard,
-                        shape = RoundedCornerShape(26.dp),
-                        shadowElevation = 10.dp,
+                        color = ColorTokens.DarkSecondaryBg.copy(alpha = 0.95f),
+                        shape = RoundedCornerShape(24.dp),
+                        shadowElevation = 12.dp,
                         border = androidx.compose.foundation.BorderStroke(1.dp, ColorTokens.DarkBorder),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -132,7 +135,7 @@ fun PromptDeskNavGraph(
                             tonalElevation = 0.dp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(66.dp)
+                                .height(64.dp)
                         ) {
                             bottomNavItems.forEach { item ->
                                 val isSelected = when (item.route) {
@@ -166,16 +169,16 @@ fun PromptDeskNavGraph(
                                         Text(
                                             text = item.title,
                                             style = MaterialTheme.typography.labelSmall.copy(
-                                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                             )
                                         )
                                     },
                                     colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = Color(0xFF042F2E),
+                                        selectedIconColor = ColorTokens.PrimaryAccent,
                                         selectedTextColor = ColorTokens.PrimaryAccent,
-                                        indicatorColor = ColorTokens.PrimaryAccent,
+                                        indicatorColor = ColorTokens.AccentSubtle,
                                         unselectedIconColor = ColorTokens.DarkSecondaryText,
-                                        unselectedTextColor = ColorTokens.DarkMutedText
+                                        unselectedTextColor = ColorTokens.DarkSecondaryText
                                     ),
                                     modifier = Modifier.testTag(item.testTag)
                                 )
@@ -195,9 +198,35 @@ fun PromptDeskNavGraph(
             composable(Screen.Splash.route) {
                 SplashScreen(
                     onNavigateNext = {
-                        val destination = if (isOnboardingCompleted) Screen.Home.route else Screen.Onboarding.route
+                        val destination = if (isLoggedIn && isProfileCompleted) {
+                            Screen.Home.route
+                        } else if (isLoggedIn) {
+                            Screen.ProfileSetup.route
+                        } else {
+                            Screen.Auth.route
+                        }
                         navController.navigate(destination) {
                             popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            composable(Screen.Auth.route) {
+                AuthScreen(
+                    onAuthSuccess = {
+                        navController.navigate(Screen.ProfileSetup.route) {
+                            popUpTo(Screen.Auth.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            composable(Screen.ProfileSetup.route) {
+                ProfileSetupScreen(
+                    onSetupComplete = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.ProfileSetup.route) { inclusive = true }
                         }
                     }
                 )
@@ -264,7 +293,16 @@ fun PromptDeskNavGraph(
             }
 
             composable(Screen.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(
+                    onSignOut = {
+                        navController.navigate(Screen.Auth.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onNavigateToProfileSetup = {
+                        navController.navigate(Screen.ProfileSetup.route)
+                    }
+                )
             }
 
             composable(

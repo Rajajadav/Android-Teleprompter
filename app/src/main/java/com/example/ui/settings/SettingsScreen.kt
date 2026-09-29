@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.FormatSize
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Speed
@@ -58,6 +60,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,16 +72,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.PromptDeskApp
+import com.example.ui.components.GoogleGIcon
 import com.example.ui.theme.CharcoalBackground
 import com.example.ui.theme.Teal80
 import com.example.ui.theme.TealDark40
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
+    onSignOut: () -> Unit = {},
+    onNavigateToProfileSetup: () -> Unit = {},
     viewModel: SettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val preferencesManager = PromptDeskApp.instance.preferencesManager
+
+    val userName by preferencesManager.userName.collectAsStateWithLifecycle(initialValue = "Raja Jadav")
+    val userEmail by preferencesManager.userEmail.collectAsStateWithLifecycle(initialValue = "rajajadavstudio@gmail.com")
+    val userOccupation by preferencesManager.userOccupation.collectAsStateWithLifecycle(initialValue = "Content Creator")
+
     val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     val defaultSpeed by viewModel.defaultSpeed.collectAsStateWithLifecycle()
     val defaultFontSize by viewModel.defaultFontSize.collectAsStateWithLifecycle()
@@ -91,6 +106,7 @@ fun SettingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showFloatingModal by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
+    var showSignOutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(message) {
         message?.let {
@@ -109,16 +125,174 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 100.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            )
+            // Studio Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = com.example.ui.theme.ObsidianSurfaceHigh,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder),
+                        modifier = Modifier.size(38.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Palette,
+                                contentDescription = null,
+                                tint = Teal80,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = "PromptDesk",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        )
+                        Text(
+                            text = "Settings",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 12.sp,
+                                color = com.example.ui.theme.ObsidianOnSurfaceVariant
+                            )
+                        )
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(100.dp),
+                    color = com.example.ui.theme.ObsidianSurfaceHigh,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        com.example.ui.home.PulsingDot(color = Teal80)
+                        Text(
+                            text = "HUD ON",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp,
+                                color = Teal80
+                            )
+                        )
+                    }
+                }
+            }
+
+            // Google Account Card Section (Account Screen)
+            SettingsSection(title = "Account", icon = Icons.Default.Person) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Profile Photo / Avatar
+                    Surface(
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        color = Color(0xFF4285F4),
+                        modifier = Modifier.size(52.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = userName.take(1).uppercase(),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 22.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = userName,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 16.sp
+                            )
+                        )
+                        Text(
+                            text = userEmail,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 13.sp
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            GoogleGIcon(modifier = Modifier.size(12.dp))
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = "Google Account • $userOccupation",
+                                fontSize = 11.sp,
+                                color = Teal80,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Account Actions: Edit Profile, Preferences, Privacy, Terms, Sign out
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = onNavigateToProfileSetup,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder)
+                    ) {
+                        Text("Edit Profile", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = { showAboutDialog = true },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder)
+                        ) {
+                            Text("Privacy & Terms", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+
+                        Button(
+                            onClick = { showSignOutDialog = true },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF2A1515),
+                                contentColor = Color(0xFFFFB4AB)
+                            )
+                        ) {
+                            Text("Sign out", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
 
             // Appearance Section
             SettingsSection(title = "Appearance", icon = Icons.Default.Palette) {
@@ -408,6 +582,50 @@ fun SettingsScreen(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     }
+
+    // Sign out Confirmation Dialog
+    if (showSignOutDialog) {
+        AlertDialog(
+            onDismissRequest = { showSignOutDialog = false },
+            title = {
+                Text(
+                    text = "Sign out of PromptDesk?",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "You will be signed out from your Google account ($userEmail) on this device. Your local scripts remain safely saved.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 14.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSignOutDialog = false
+                        coroutineScope.launch {
+                            preferencesManager.signOut()
+                            onSignOut()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFBA1A1A),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("Sign out", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSignOutDialog = false }) {
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurface)
+                }
+            },
+            containerColor = Color(0xFF1E2023)
+        )
+    }
 }
 
 @Composable
@@ -418,10 +636,11 @@ fun SettingsSection(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
-        )
+            containerColor = com.example.ui.theme.ObsidianSurfaceLow
+        ),
+        border = BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder)
     ) {
         Column(
             modifier = Modifier
@@ -430,9 +649,9 @@ fun SettingsSection(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = TealDark40.copy(alpha = 0.4f),
-                    modifier = Modifier.size(32.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    color = com.example.ui.theme.ObsidianSurfaceHigh,
+                    modifier = Modifier.size(34.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(icon, contentDescription = null, tint = Teal80, modifier = Modifier.size(18.dp))

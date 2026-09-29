@@ -1,6 +1,7 @@
 package com.example.ui.editor
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.FormatAlignLeft
 import androidx.compose.material.icons.filled.FormatAlignRight
 import androidx.compose.material.icons.filled.FormatBold
 import androidx.compose.material.icons.filled.FormatItalic
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
@@ -335,32 +337,37 @@ fun ScriptEditorScreen(
                                 shape = RoundedCornerShape(14.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Teal80,
-                                    contentColor = Color(0xFF042F2E)
+                                    contentColor = Color(0xFF003730)
                                 ),
                                 modifier = Modifier
                                     .height(48.dp)
                                     .testTag("floating_prompter_button")
                             ) {
-                                Icon(Icons.Default.Videocam, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.Layers, contentDescription = null, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text("Floating", fontWeight = FontWeight.Bold)
+                                Text("Launch HUD", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             }
 
                             // Fullscreen Teleprompter Button
-                            OutlinedButton(
+                            Button(
                                 onClick = {
                                     viewModel.saveScriptImmediately()
                                     val id = viewModel.getScriptId()
                                     onNavigateToTeleprompter(id)
                                 },
                                 shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = com.example.ui.theme.ObsidianSurface,
+                                    contentColor = com.example.ui.theme.ObsidianOnSurface
+                                ),
+                                border = BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder),
                                 modifier = Modifier
                                     .height(48.dp)
                                     .testTag("start_teleprompter_button")
                             ) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(18.dp))
+                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = com.example.ui.theme.ObsidianOnSurface, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Fullscreen", color = MaterialTheme.colorScheme.onSurface)
+                                Text("Fullscreen", color = com.example.ui.theme.ObsidianOnSurface, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
                             }
                         }
                     }

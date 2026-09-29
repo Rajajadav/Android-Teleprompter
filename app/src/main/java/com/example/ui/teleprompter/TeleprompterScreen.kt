@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollBy
@@ -419,10 +420,11 @@ fun TeleprompterScreen(
 
                 // Primary Bottom Control Bar
                 Card(
-                    shape = RoundedCornerShape(28.dp),
+                    shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF101720).copy(alpha = 0.92f)
+                        containerColor = com.example.ui.theme.ObsidianSurface.copy(alpha = 0.95f)
                     ),
+                    border = BorderStroke(1.dp, com.example.ui.theme.ObsidianBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -453,7 +455,7 @@ fun TeleprompterScreen(
                             onClick = { viewModel.togglePlayPause() },
                             colors = IconButtonDefaults.filledIconButtonColors(
                                 containerColor = Teal80,
-                                contentColor = Color(0xFF042F2E)
+                                contentColor = Color(0xFF003730)
                             ),
                             shape = CircleShape,
                             modifier = Modifier

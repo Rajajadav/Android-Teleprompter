@@ -2,36 +2,56 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Teal Green Primary Accents
-val Teal80 = Color(0xFF19C7B1)
-val TealCyan80 = Color(0xFF65E6D5)
-val TealLight80 = Color(0xFFA5F3EB)
+// Obsidian Teleprompter Color Palette (from Stitch Design System)
+val ObsidianBase = Color(0xFF111317)
+val ObsidianSurfaceLowest = Color(0xFF0C0E11)
+val ObsidianSurfaceLow = Color(0xFF1A1C1F)
+val ObsidianSurface = Color(0xFF1E2023)
+val ObsidianSurfaceHigh = Color(0xFF282A2D)
+val ObsidianSurfaceHighest = Color(0xFF333538)
+val ObsidianBorder = Color(0xFF252B32)
+val ObsidianOutline = Color(0xFF859490)
+val ObsidianOutlineVariant = Color(0xFF3C4A46)
 
-val Teal40 = Color(0xFF0BAF9D)
-val TealCyan40 = Color(0xFF14B8A6)
-val TealDark40 = Color(0xFF0F5950)
+// Text
+val ObsidianOnSurface = Color(0xFFE2E2E6)
+val ObsidianOnSurfaceVariant = Color(0xFFBBCAC5)
+val ObsidianMuted = Color(0xFF6F7882)
 
-// Dark Palette
-val CharcoalBackground = Color(0xFF0B0D10)
-val CharcoalSurface = Color(0xFF12151A)
-val CharcoalSurfaceVariant = Color(0xFF171B21)
-val CharcoalSurfaceElevated = Color(0xFF1D2229)
-val CharcoalOutline = Color(0xFF252B32)
-val CharcoalOutlineVariant = Color(0xFF1B2026)
+// Primary & Secondary Accents (Luminescent Teal & Cyan)
+val TealPrimary = Color(0xFF4BE3CC)
+val TealPrimaryContainer = Color(0xFF19C7B1)
+val TealOnPrimary = Color(0xFF003730)
+val TealSecondary = Color(0xFF58DACA)
+val TealAccentGlow = Color(0x334BE3CC)
+val TealAccentSubtle = Color(0x1F4BE3CC)
 
-// Text Colors
-val TextPrimary = Color(0xFFF5F7F8)
-val TextSecondary = Color(0xFFA7AFB7)
-val TextTertiary = Color(0xFF6F7882)
+// Tertiary (Warm Amber / Peach)
+val PeachTertiary = Color(0xFFFFBFA2)
+val PeachTertiaryContainer = Color(0xFFFF9763)
+val PeachOnTertiary = Color(0xFF561F00)
 
-// Functional Colors
-val RecordRed = Color(0xFFFF6B6B)
-val RecordRedLight = Color(0xFFFFA8A8)
-val WarningAmber = Color(0xFFF5C451)
-val SuccessGreen = Color(0xFF38D39F)
+// Semantic
+val StatusError = Color(0xFFFFB4AB)
+val StatusSuccess = Color(0xFF38D39F)
+val StatusWarning = Color(0xFFF5C451)
 
-// Mirror Indicator & Badges
+// Aliases for compatibility
+val SuccessGreen = StatusSuccess
+val WarningAmber = StatusWarning
+val Teal80 = TealPrimary
+val TealCyan80 = TealSecondary
+val TealLight80 = Color(0xFF66F9E2)
+val Teal40 = TealPrimaryContainer
+val TealDark40 = Color(0xFF004D44)
+val CharcoalBackground = ObsidianBase
+val CharcoalSurface = ObsidianSurfaceLow
+val CharcoalSurfaceVariant = ObsidianSurface
+val CharcoalSurfaceElevated = ObsidianSurfaceHigh
+val CharcoalOutline = ObsidianBorder
+val RecordRed = StatusError
 val MirrorBadgeBg = Color(0xFF7C3AED)
 val MirrorBadgeText = Color(0xFFEDE9FE)
+
 
 

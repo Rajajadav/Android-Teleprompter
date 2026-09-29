@@ -9,8 +9,8 @@
         <aapt:attr name="android:fillColor">
             <gradient
                 android:angle="315"
-                android:endColor="#0A1118"
-                android:startColor="#162A36"
+                android:startColor="#171B21"
+                android:endColor="#111317"
                 android:type="linear" />
         </aapt:attr>
     </path>

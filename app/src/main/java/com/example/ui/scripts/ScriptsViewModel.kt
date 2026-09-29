@@ -19,7 +19,10 @@ enum class SortOption(val label: String) {
     RECENT("Recently Modified"),
     TITLE("Alphabetical"),
     WORD_COUNT("Word Count"),
-    FAVORITES("Favorites First")
+    FAVORITES("Favorites First"),
+    UPDATED_DESC("Recently Updated"),
+    TITLE_ASC("Title A-Z"),
+    WORD_COUNT_DESC("Word Count");
 }
 
 class ScriptsViewModel(
@@ -58,9 +61,9 @@ class ScriptsViewModel(
         }
 
         when (sort) {
-            SortOption.RECENT -> list.sortedByDescending { it.updatedAt }
-            SortOption.TITLE -> list.sortedBy { it.title.lowercase() }
-            SortOption.WORD_COUNT -> list.sortedByDescending { it.wordCount }
+            SortOption.RECENT, SortOption.UPDATED_DESC -> list.sortedByDescending { it.updatedAt }
+            SortOption.TITLE, SortOption.TITLE_ASC -> list.sortedBy { it.title.lowercase() }
+            SortOption.WORD_COUNT, SortOption.WORD_COUNT_DESC -> list.sortedByDescending { it.wordCount }
             SortOption.FAVORITES -> list.sortedWith(compareByDescending<ScriptEntity> { it.favorite }.thenByDescending { it.updatedAt })
         }
     }.stateIn(

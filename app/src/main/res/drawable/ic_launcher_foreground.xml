@@ -1,50 +1,60 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <!-- Teleprompter Screen Glass / Monitor Frame -->
-    <path
-        android:fillColor="#0D9488"
-        android:pathData="M27,24 h54 a6,6 0 0,1 6,6 v42 a6,6 0 0,1 -6,6 h-54 a6,6 0 0,1 -6,-6 v-42 a6,6 0 0,1 6,-6 z" />
+    android:viewportWidth="120"
+    android:viewportHeight="120">
 
-    <!-- Screen Bezel Dark Inset -->
+    <!-- Inner Circle Background Cue -->
     <path
-        android:fillColor="#042F2E"
-        android:pathData="M29,27 h50 a4,4 0 0,1 4,4 v36 a4,4 0 0,1 -4,4 h-50 a4,4 0 0,1 -4,-4 v-36 a4,4 0 0,1 4,-4 z" />
+        android:fillColor="#12151A"
+        android:strokeColor="#252B32"
+        android:strokeWidth="1.5"
+        android:pathData="M60,22 A38,38 0 1,0 60,98 A38,38 0 1,0 60,22 Z" />
 
-    <!-- Teleprompter Lines: Top Highlight Script Line (Teal Accent) -->
+    <!-- Teleprompter floating frame & camera aperture lens cue -->
     <path
-        android:fillColor="#2DD4BF"
-        android:pathData="M34,35 h40 a2.5,2.5 0 0,1 0,5 h-40 a2.5,2.5 0 0,1 0,-5 z" />
+        android:fillColor="#1F19C7B1"
+        android:strokeColor="#4BE3CC"
+        android:strokeWidth="3"
+        android:strokeLineJoin="round"
+        android:pathData="M44,34 h32 a8,8 0 0,1 8,8 v18 a8,8 0 0,1 -8,8 h-32 a8,8 0 0,1 -8,-8 v-18 a8,8 0 0,1 8,-8 z" />
 
-    <!-- Script Line 2 (White, Prominent) -->
+    <!-- Script line 1 (Cyan) -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,44 h32 a2.5,2.5 0 0,1 0,5 h-32 a2.5,2.5 0 0,1 0,-5 z" />
+        android:strokeColor="#65E6D5"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M44,44 L68,44" />
 
-    <!-- Script Line 3 (Cyan/Teal, Reading Active Line) -->
+    <!-- Script line 2 (Primary white) -->
     <path
-        android:fillColor="#5EEAD4"
-        android:pathData="M34,53 h38 a2.5,2.5 0 0,1 0,5 h-38 a2.5,2.5 0 0,1 0,-5 z" />
+        android:strokeColor="#F5F7F8"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M44,51 L76,51" />
 
-    <!-- Script Line 4 (Subtle scroll line) -->
+    <!-- Script line 3 (Secondary text) -->
     <path
-        android:fillColor="#14B8A6"
-        android:pathData="M34,62 h22 a2.5,2.5 0 0,1 0,5 h-22 a2.5,2.5 0 0,1 0,-5 z" />
+        android:strokeColor="#A7AFB7"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M44,58 L60,58" />
 
-    <!-- Camera / Voice Follow Pulse Lens dot at top center of glass -->
+    <!-- Teleprompter floating indicator pip / record dot -->
     <path
-        android:fillColor="#99F6E4"
-        android:pathData="M54,30 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+        android:fillColor="#4BE3CC"
+        android:pathData="M74,39 A3,3 0 1,0 74,45 A3,3 0 1,0 74,39 Z" />
 
-    <!-- Desk Mount Stem -->
+    <!-- Lower pedestal / prompt cue -->
     <path
-        android:fillColor="#115E59"
-        android:pathData="M51,78 h6 v8 h-6 z" />
+        android:strokeColor="#4BE3CC"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M46,76 L60,68 L74,76" />
 
-    <!-- Desk Mount Base -->
+    <!-- Pedestal base dot -->
     <path
-        android:fillColor="#14B8A6"
-        android:pathData="M40,86 h28 a3,3 0 0,1 3,3 v1 h-34 v-1 a3,3 0 0,1 3,-3 z" />
+        android:fillColor="#65E6D5"
+        android:pathData="M60,81.5 A2.5,2.5 0 1,0 60,86.5 A2.5,2.5 0 1,0 60,81.5 Z" />
 </vector>
